@@ -1,0 +1,63 @@
+---
+runtime: shiny
+output: html_document
+---
+
+
+```{r,echo=FALSE,warning=FALSE,comment="",error=FALSE,message=FALSE}
+
+library(shiny)
+shinyUI(fluidPage(
+  title="hola1",
+  h2("Red con una sola capa",style="font-family:Helvetica, cursive;
+     color:brown;
+     font-size:25px;")
+))
+```
+
+Grafico de la funcion: $$f(x,\beta,w,b,\alpha )= \sum_{i=1}^{K}\beta_{j}\hspace{0.2em}\sigma(w_{j}x+b_{j}) + \alpha$$
+
+#################################
+```{r, echo=FALSE}
+inputPanel(
+  textInput('Beta', 'Beta: Enter a vector (comma delimited)', '0.1,0.5,0.4'),
+  textInput('W', 'W: Enter a vector (comma delimited)', '0.1,0.5,0.4'),
+  textInput('b', 'b: Enter a vector (comma delimited)', '0.1,0.5,0.4'),
+  textInput('Alpha', 'Alpha: Enter a vector (comma delimited)', "0")
+)
+
+renderPlot({
+  Indicadora<-function(x){
+  vec=c()
+  for (i in x){
+    if (i>=0){
+      vec<-c(vec,i)
+    }
+    else{
+      vec<-c(vec,0)
+    }
+  }
+  return(vec)
+}
+
+f<-function(x,beta,w,b,alpha){
+  aux<-w*x+b
+  res<-sum(beta*Indicadora(aux))+alpha
+  return(res)
+}
+  #x=as.numeric(unlist(strsplit(input$Beta,",")))
+  #plot(x)
+  Beta1=as.numeric(unlist(strsplit(input$Beta,",")))
+  w1=as.numeric(unlist(strsplit(input$W,",")))
+  b1=as.numeric(unlist(strsplit(input$b,",")))
+  Alpha1=as.numeric(unlist(strsplit(input$Alpha,",")))
+  
+  xvec<-c(-10:10)
+  yvec<-c()
+  for (i in xvec){
+    yvec=c(yvec,f(i,Beta1,w1,b1,Alpha1))
+  }
+  plot(yvec)
+  plot(xvec,yvec,type = 'l',col='red')
+})
+```
